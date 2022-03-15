@@ -1,9 +1,34 @@
 pipeline {
-    agent { docker { image 'maven:3.8.4-openjdk-11-slim' } }
+    agent any
+    
+    triggers {
+        pollSCM 'H * * * *'
+    }
+    
     stages {
-        stage('build') {
+        stage('Clone sources') {
             steps {
-                sh 'mvn --version'
+                git 'https://github.com/sandersoncoelho/lottery-api.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh './gradlew assemble'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh './gradlew test'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh './gradlew docker'
+            }
+        }
+        stage('Run Docker Image') {
+            steps {
+                sh './gradlew dockerRun'
             }
         }
     }
