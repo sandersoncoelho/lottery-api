@@ -16,7 +16,7 @@ public class GameController {
     }
 
 
-    @GetMapping("tip")
+    @GetMapping("/tip")
     public List<Integer> getTip() {
         return List.of(4, 7, 17, 54, 23, 58);
     }
